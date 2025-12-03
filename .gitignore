@@ -1,0 +1,27 @@
+# Build artifacts
+obj/
+*.o
+*.a
+*.so
+
+# Compiled executable
+syswatch
+syswatch-*
+pi_info
+test_storage_detection
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# System files
+.cache/
+.config/
+
+# Debug symbols
+*.gdb
+core
