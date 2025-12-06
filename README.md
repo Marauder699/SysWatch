@@ -1,10 +1,31 @@
 # SysWatch - System Information & Health Monitor
 
+[![GitHub Release](https://img.shields.io/github/v/release/Marauder699/SysWatch)](https://github.com/Marauder699/SysWatch/releases/latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Language: C](https://img.shields.io/badge/Language-C-blue.svg)](https://en.wikipedia.org/wiki/C_(programming_language))
+[![Platform: Linux](https://img.shields.io/badge/Platform-Linux-green.svg)](https://www.linux.org/)
+
 🖥️ **Hybrid GUI application** in C combining:
 - 📋 **System Information**: detailed hardware and OS specifications
 - 🌡️ **Health monitoring**: real-time system health indicators (color-coded temperature)
 
 Designed for Linux (Raspberry Pi, PC, servers) with a modern GTK interface.
+
+---
+
+## 📥 Quick Download
+
+**[⬇️ Download Latest Release (ARM64 - Raspberry Pi)](https://github.com/Marauder699/SysWatch/releases/latest/download/syswatch-aarch64-linux)**
+
+```bash
+# Quick install (Raspberry Pi 64-bit)
+wget https://github.com/Marauder699/SysWatch/releases/latest/download/syswatch-aarch64-linux
+chmod +x syswatch-aarch64-linux
+sudo apt-get install libgtk-3-0  # Install dependency if needed
+./syswatch-aarch64-linux
+```
+
+**Or compile from source for other platforms (x86_64, ARMv7)** → See [Build](#-build) section below
 
 ---
 
