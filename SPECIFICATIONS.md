@@ -19,6 +19,7 @@ SysWatch is a lightweight real-time system monitor designed for Raspberry Pi and
 
 ### 1.3 Target audience
 - Raspberry Pi users who want quick system status
+- New orcasual linux users
 - Linux system administrators looking for a lightweight companion tool
 - Developers testing applications on multiple architectures
 

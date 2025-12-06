@@ -1,6 +1,6 @@
 /*
  * system_info.c
- * Implémentation des fonctions de lecture des informations système
+ * System information reading functions implementation
  */
 
 #define _GNU_SOURCE  // Pour strcasestr
@@ -21,11 +21,11 @@ float get_cpu_temperature_celsius(void) {
     FILE *fp;
     char buffer[128];
     
-    // Méthode 1: Lecture directe depuis /sys/class/thermal (universel Linux)
+    // Method 1: Direct read from /sys/class/thermal (universal Linux)
     fp = fopen("/sys/class/thermal/thermal_zone0/temp", "r");
     if (fp != NULL) {
         if (fgets(buffer, sizeof(buffer), fp) != NULL) {
-            // La température est en millidegrés Celsius
+            // Temperature is in millidegrees Celsius
             int temp_millidegrees = atoi(buffer);
             float temp_celsius = temp_millidegrees / 1000.0f;
             fclose(fp);
@@ -34,14 +34,14 @@ float get_cpu_temperature_celsius(void) {
         fclose(fp);
     }
     
-    // Méthode 2: Fallback sur vcgencmd (spécifique Raspberry Pi)
+    // Method 2: Fallback to vcgencmd (Raspberry Pi specific)
     fp = popen("vcgencmd measure_temp", "r");
     if (fp != NULL) {
         if (fgets(buffer, sizeof(buffer), fp) != NULL) {
-            // Le format est: temp=XX.X'C
+            // Format is: temp=XX.X'C
             char *temp_start = strchr(buffer, '=');
             if (temp_start != NULL) {
-                temp_start++; // Passer le '='
+                temp_start++; // Skip the '='
                 float temp = atof(temp_start);
                 pclose(fp);
                 return temp;
@@ -50,7 +50,7 @@ float get_cpu_temperature_celsius(void) {
         pclose(fp);
     }
     
-    // Erreur: aucune méthode n'a fonctionné
+    // Error: no method worked
     return -1.0f;
 }
 

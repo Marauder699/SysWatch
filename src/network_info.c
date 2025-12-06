@@ -1,6 +1,6 @@
 /*
  * network_info.c
- * Implémentation des fonctions de lecture des informations réseau
+ * Network information reading functions implementation
  */
 
 #include "network_info.h"
@@ -14,16 +14,16 @@
 const char* get_hostname(void) {
     static char hostname_buffer[256] = {0};
     
-    // Si déjà lu, retourner le cache
+    // If already read, return cached value
     if (hostname_buffer[0] != '\0') {
         return hostname_buffer;
     }
     
-    // Lire le hostname depuis /etc/hostname
+    // Read hostname from /etc/hostname
     FILE *fp = fopen("/etc/hostname", "r");
     if (fp != NULL) {
         if (fgets(hostname_buffer, sizeof(hostname_buffer), fp) != NULL) {
-            // Supprimer la newline
+            // Remove newline
             size_t len = strlen(hostname_buffer);
             if (len > 0 && hostname_buffer[len-1] == '\n') {
                 hostname_buffer[len-1] = '\0';
@@ -34,7 +34,7 @@ const char* get_hostname(void) {
         fclose(fp);
     }
     
-    // Fallback: utiliser gethostname()
+    // Fallback: use gethostname()
     if (gethostname(hostname_buffer, sizeof(hostname_buffer)) == 0) {
         return hostname_buffer;
     }

@@ -25,3 +25,6 @@ test_storage_detection
 # Debug symbols
 *.gdb
 core
+
+# Document
+PUBLISH_GUIDE.md

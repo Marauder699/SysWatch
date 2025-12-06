@@ -1,11 +1,11 @@
 /*
  * gui.c
- * Implémentation de l'interface graphique GTK
+ * GTK graphical user interface implementation
  * 
- * Convention de nommage:
- * - Fonctions GTK: gtk_*(), g_*()          [Bibliothèque GTK]
- * - Nos fonctions publiques: create_gui(), run_gui(), etc.  [Notre API]
- * - Nos fonctions privées: on_*(), update_*()               [Callbacks internes]
+ * Naming conventions:
+ * - GTK functions: gtk_*(), g_*()         [GTK Library]
+ * - Public functions: create_gui(), run_gui(), etc. [Public API]
+ * - Private functions: on_*(), update_*()          [Internal Callbacks]
  */
 
 #include "gui.h"
@@ -13,13 +13,13 @@
 #include <stdlib.h>
 #include <glib.h>
 
-// Structure pour passer les données de test disque au thread
+// Structure to pass disk speed test data to the thread
 typedef struct {
     AppWidgets *widgets;
     GtkWidget *button;
 } DiskSpeedTestData;
 
-// Macro pour convertir un nombre en string
+// Macro to convert a number to string
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 
@@ -31,60 +31,74 @@ static gboolean update_storage_speed_test_results(gpointer data);
 static void init_physical_storages(AppWidgets *widgets);
 
 // ============================================================================
-// FONCTIONS PRIVÉES (CALLBACKS)
+// PRIVATE FUNCTIONS (CALLBACKS)
 // ============================================================================
 
-// Thread pour effectuer les tests de vitesse de disque
+// Thread to perform disk speed tests
 static gpointer storage_speed_test_thread(gpointer data) {
     DiskSpeedTestData *test_data = (DiskSpeedTestData *)data;
     AppWidgets *widgets = test_data->widgets;
     
-    // Boucler sur tous les disques et effectuer les tests
+    // Loop through all disks and perform tests
     for (int i = 0; i < widgets->storage_count; i++) {
         float read_speed = 0.0f;
         float write_speed = 0.0f;
         
-        // Effectuer le test de vitesse pour ce disque
+        // Perform the speed test for this disk
         get_storage_speed_test(widgets->physical_storages[i].name, &read_speed, &write_speed);
         
-        // Stocker les résultats dans la structure
+        // Store results in the structure
         widgets->storages[i].read_speed = read_speed;
         widgets->storages[i].write_speed = write_speed;
     }
     
-    // Demander une mise à jour de l'UI (thread-safe via g_idle_add)
+    // Request UI update (thread-safe via g_idle_add)
     g_idle_add(update_storage_speed_test_results, test_data);
     
     return NULL;
 }
 
-// Callback pour mettre à jour les résultats du disk speed test
+// Callback to update disk speed test results
 static gboolean update_storage_speed_test_results(gpointer data) {
     DiskSpeedTestData *test_data = (DiskSpeedTestData *)data;
     AppWidgets *widgets = test_data->widgets;
     
     char buffer[64];
     
-    // Mettre à jour les labels Read/Write pour chaque disque
+    // Update Read/Write labels for each disk
     for (int i = 0; i < widgets->storage_count; i++) {
-        // Mettre à jour le label Read
+        // Check if this is an NVMe (results are approximate due to controller cache)
+        bool is_nvme = (strncmp(widgets->physical_storages[i].name, "nvme", 4) == 0);
+        const char *suffix = is_nvme ? " ~" : "";  // ~ indicates approximate value
+        
+        // Update Read label
         if (widgets->storages[i].read_speed > 0) {
-            snprintf(buffer, sizeof(buffer), "%.1f MB/s", widgets->storages[i].read_speed);
+            snprintf(buffer, sizeof(buffer), "%.1f MB/s%s", widgets->storages[i].read_speed, suffix);
         } else {
             snprintf(buffer, sizeof(buffer), "N/A");
         }
         gtk_label_set_text(GTK_LABEL(widgets->storages[i].read_label), buffer);
         
-        // Mettre à jour le label Write
+        // Update Write label
         if (widgets->storages[i].write_speed > 0) {
-            snprintf(buffer, sizeof(buffer), "%.1f MB/s", widgets->storages[i].write_speed);
+            snprintf(buffer, sizeof(buffer), "%.1f MB/s%s", widgets->storages[i].write_speed, suffix);
         } else {
             snprintf(buffer, sizeof(buffer), "N/A");
         }
         gtk_label_set_text(GTK_LABEL(widgets->storages[i].write_label), buffer);
+        
+        // Add tooltip for NVMe explaining the approximation
+        if (is_nvme) {
+            gtk_widget_set_tooltip_text(widgets->storages[i].read_label, 
+                "~ Approximate: NVMe speeds are limited by PCIe bandwidth.\n"
+                "Actual speeds may vary due to controller cache.");
+            gtk_widget_set_tooltip_text(widgets->storages[i].write_label, 
+                "~ Approximate: NVMe speeds are limited by PCIe bandwidth.\n"
+                "Actual speeds may vary due to controller cache.");
+        }
     }
     
-    // Réactiver le bouton
+    // Re-enable the button
     gtk_widget_set_sensitive(test_data->button, TRUE);
     gtk_button_set_label(GTK_BUTTON(test_data->button), "⚡ Speed Test");
     
@@ -92,67 +106,114 @@ static gboolean update_storage_speed_test_results(gpointer data) {
     return FALSE;
 }
 
-// Callback automatique toutes les secondes
+// Automatic callback every second
 static gboolean update_all_callback(gpointer user_data) {
     AppWidgets *widgets = (AppWidgets *)user_data;
     update_all_displays(widgets);
-    return TRUE; // Continuer les mises à jour
+    return TRUE;
 }
 
-// Callback quand on clique sur "À propos"
+// Callback when clicking "About"
 static void on_about_clicked(GtkWidget *widget, gpointer user_data) {
     (void)widget;
     (void)user_data;
     
-    // Créer un dialogue About professionnel (standard GTK)
-    GtkWidget *about = gtk_about_dialog_new();
+    // Create a custom dialog to control labels
+    GtkWidget *dialog = gtk_dialog_new_with_buttons(
+        "About SysWatch",
+        NULL,
+        GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+        "Close", GTK_RESPONSE_CLOSE,
+        NULL
+    );
     
-    // Informations de base
-    gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(about), "SysWatch");
-    gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(about), TOSTRING(APP_VERSION));
-    gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(about), 
-        "Copyright © 2025 " TOSTRING(APP_AUTHOR));
+    gtk_window_set_default_size(GTK_WINDOW(dialog), 500, 550);
+    
+    GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    gtk_container_set_border_width(GTK_CONTAINER(content), 20);
+    
+    GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
+    gtk_container_add(GTK_CONTAINER(content), vbox);
+    
+    // Title and version
+    GtkWidget *title = gtk_label_new(NULL);
+    gtk_label_set_markup(GTK_LABEL(title), 
+        "<span size='x-large' weight='bold'>SysWatch</span>\n"
+        "<span size='small'>Version " TOSTRING(APP_VERSION) "</span>");
+    gtk_label_set_justify(GTK_LABEL(title), GTK_JUSTIFY_CENTER);
+    gtk_box_pack_start(GTK_BOX(vbox), title, FALSE, FALSE, 5);
+    
+    // Séparateur
+    gtk_box_pack_start(GTK_BOX(vbox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 5);
     
     // Description
-    gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(about),
+    GtkWidget *desc = gtk_label_new(
         "System Information & Health Monitor for Linux\n\n"
         "Displays hardware specifications, real-time temperature monitoring,\n"
         "CPU/GPU usage, memory statistics, network bandwidth, and storage\n"
         "information with speed testing capabilities.\n\n"
         "Built with C and GTK3");
+    gtk_label_set_justify(GTK_LABEL(desc), GTK_JUSTIFY_CENTER);
+    gtk_label_set_line_wrap(GTK_LABEL(desc), TRUE);
+    gtk_box_pack_start(GTK_BOX(vbox), desc, FALSE, FALSE, 5);
     
-    // Licence MIT
-    gtk_about_dialog_set_license_type(GTK_ABOUT_DIALOG(about), GTK_LICENSE_MIT_X11);
+    // Separator
+    gtk_box_pack_start(GTK_BOX(vbox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 5);
     
-    // Auteurs
-    const gchar *authors[] = {
-        TOSTRING(APP_AUTHOR),
-        NULL
-    };
-    gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(about), authors);
+    // Written by: (custom label)
+    GtkWidget *credits_label = gtk_label_new(NULL);
+    gtk_label_set_markup(GTK_LABEL(credits_label), "<b>Written by:</b>");
+    gtk_widget_set_halign(credits_label, GTK_ALIGN_START);
+    gtk_box_pack_start(GTK_BOX(vbox), credits_label, FALSE, FALSE, 0);
     
-    // Afficher le dialogue
-    gtk_dialog_run(GTK_DIALOG(about));
-    gtk_widget_destroy(about);
+    // Developer history
+    GtkWidget *author_info = gtk_label_new(
+        "Stéphane Corriveau\n"
+        "Full-Stack Developer\n"
+        "(Jack of all trades, master of some)\n\n"
+        "Early Years: Vic-20, Commodore 64, Amiga 500\n"
+        "University: Pascal, C/C++\n"
+        "Early Career: Delphi, C++ Builder\n"
+        "Mid Career: 10+ years SAP\n"
+        "Recent 10 years: TypeScript, Angular, C#, Python\n"
+        "Now: Exploring Linux systems\n\n"
+        "Made with passion and fun ❤️");
+    gtk_label_set_justify(GTK_LABEL(author_info), GTK_JUSTIFY_LEFT);
+    gtk_widget_set_halign(author_info, GTK_ALIGN_START);
+    gtk_box_pack_start(GTK_BOX(vbox), author_info, FALSE, FALSE, 5);
+    
+    // Separator
+    gtk_box_pack_start(GTK_BOX(vbox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 5);
+    
+    // Copyright and license
+    GtkWidget *copyright = gtk_label_new(
+        "Copyright © 2025 " TOSTRING(APP_AUTHOR) "\n"
+        "Licensed under MIT License");
+    gtk_label_set_justify(GTK_LABEL(copyright), GTK_JUSTIFY_CENTER);
+    gtk_box_pack_start(GTK_BOX(vbox), copyright, FALSE, FALSE, 5);
+    
+    gtk_widget_show_all(dialog);
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
 }
 
-// Callback quand on clique sur "Quitter"
+// Callback when clicking "Quit"
 static void on_quit_clicked(GtkWidget *widget, gpointer user_data) {
     (void)widget;
     (void)user_data;
-    gtk_main_quit();  // [GTK] Quitter la boucle principale
+    gtk_main_quit();
 }
 
-// Callback quand on clique sur "Refresh" (rafraîchir la liste des disques)
+// Callback when clicking "Refresh" (refresh disk list)
 static void on_storage_refresh_clicked(GtkWidget *widget, gpointer user_data) {
     (void)widget;
     AppWidgets *widgets = (AppWidgets *)user_data;
     
-    // Réinitialiser la liste des disques physiques
+    // Reset the physical storages list
     init_physical_storages(widgets);
 }
 
-// Callback quand on clique sur "Speed Test" (disques)
+// Callback when clicking "Speed Test" (disk)
 static void on_storage_speed_test_clicked(GtkWidget *widget, gpointer user_data) {
     AppWidgets *widgets = (AppWidgets *)user_data;
     
@@ -160,59 +221,59 @@ static void on_storage_speed_test_clicked(GtkWidget *widget, gpointer user_data)
         return;
     }
     
-    // Désactiver le bouton pendant le test
+    // Disable button during test
     gtk_widget_set_sensitive(widget, FALSE);
     gtk_button_set_label(GTK_BUTTON(widget), "🔄 Testing...");
     
-    // Créer une structure pour passer les données au thread
+    // Create structure to pass data to thread
     DiskSpeedTestData *test_data = malloc(sizeof(DiskSpeedTestData));
     test_data->widgets = widgets;
     test_data->button = widget;
     
-    // Initialiser les vitesses
+    // Initialize speeds
     for (int i = 0; i < widgets->storage_count; i++) {
         widgets->storages[i].read_speed = 0.0f;
         widgets->storages[i].write_speed = 0.0f;
     }
     
-    // Lancer le test dans un thread
+    // Launch test in a thread
     GThread *thread = g_thread_new("storage_speed_test", storage_speed_test_thread, test_data);
     g_thread_unref(thread);
 }
 
 // ============================================================================
-// FONCTIONS UTILITAIRES
+// UTILITY FUNCTIONS
 // ============================================================================
 
-// Obtenir la couleur selon la température (style NZXT CAM)
+// Get temperature color based on value (NZXT CAM style)
 static const char* get_temperature_color(float temp_celsius) {
     if (temp_celsius < 60.0f) {
-        return "#00FF00";  // 🟢 Vert : optimal
+        return "#00FF00";  // Green: optimal
     } else if (temp_celsius < 75.0f) {
-        return "#FFA500";  // 🟡 Orange/Jaune : attention
+        return "#FFA500";  // Orange/Yellow: attention
     } else {
-        return "#FF0000";  // 🔴 Rouge : chaud
+        return "#FF0000";  // Red: hot
     }
 }
 
-// Créer un cadre (frame) avec titre
+// Create a frame (frame) with title
 static GtkWidget* create_frame(const char *title) {
-    GtkWidget *frame = gtk_frame_new(title);  // [GTK] Créer cadre
-    gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_IN);  // [GTK] Style
+    GtkWidget *frame = gtk_frame_new(title);
+    gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_IN);
     return frame;
 }
 
 // ============================================================================
-// FONCTIONS PRIVÉES - INITIALISATION RÉSEAU
+// PRIVATE FUNCTIONS - NETWORK INITIALIZATION
 // ============================================================================
 
-// Initialiser la liste des interfaces réseau (appelée une seule fois)
+// Initialize network interface list (called once)
 static void init_network_interfaces(AppWidgets *widgets) {
     if (widgets == NULL) {
         return;
     }
     
-    // Créer UN SEUL grid pour tout le tableau (header + data)
+    // Create a SINGLE grid for the entire table (header + data)
     GtkWidget *table_grid = gtk_grid_new();
     gtk_grid_set_column_spacing(GTK_GRID(table_grid), 10);
     gtk_grid_set_row_spacing(GTK_GRID(table_grid), 5);
@@ -242,7 +303,7 @@ static void init_network_interfaces(AppWidgets *widgets) {
     GtkWidget *separator = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
     gtk_grid_attach(GTK_GRID(table_grid), separator, 0, 1, 4, 1);
     
-    // Parser les interfaces et les ajouter au même grid
+    // Parse interfaces and add to the same grid
     const char *interfaces_str = get_network_interfaces();
     char interfaces_copy[512];
     strncpy(interfaces_copy, interfaces_str, sizeof(interfaces_copy) - 1);
@@ -252,10 +313,10 @@ static void init_network_interfaces(AppWidgets *widgets) {
     int row = 2;
     int interface_count = 0;
     
-    // Allouer la mémoire pour stocker les interfaces
+    // Allocate memory to store interfaces
     widgets->network_interface_count = 0;
     
-    // Compter les interfaces d'abord
+    // Count interfaces first
     char interfaces_count_copy[512];
     strncpy(interfaces_count_copy, interfaces_str, sizeof(interfaces_count_copy) - 1);
     char *count_token = strtok(interfaces_count_copy, ",");
@@ -269,26 +330,26 @@ static void init_network_interfaces(AppWidgets *widgets) {
         widgets->network_interface_count = interface_count;
     }
     
-    // Réinitialiser token pour le parcours
+    // Reset token for traversal
     strncpy(interfaces_copy, interfaces_str, sizeof(interfaces_copy) - 1);
     token = strtok(interfaces_copy, ",");
     interface_count = 0;
     
     while (token != NULL) {
-        // Nettoyer les espaces au début
+        // Clean spaces at start
         while (*token == ' ') token++;
         
-        // Extraire le nom de l'interface (avant la parenthèse)
+        // Extract interface name (before parenthesis)
         char iface_name[64] = {0};
         char iface_type[64] = {0};
         sscanf(token, "%s (%[^)])", iface_name, iface_type);
         
-        // Colonne 0: Icône (image) + nom interface + type (dans un HBox)
+        // Column 0: Icon (image) + interface name + type (in HBox)
         GtkWidget *iface_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
         gtk_widget_set_halign(iface_hbox, GTK_ALIGN_START);
         
-        // Charger l'icône du thème système
-        const char *icon_name = "network-wired";  // Par défaut
+        // Load icon from system theme
+        const char *icon_name = "network-wired";  // Default
         if (strstr(iface_type, "WiFi") != NULL) {
             icon_name = "network-wireless";
         } else if (strstr(iface_type, "Ethernet") != NULL) {
@@ -299,32 +360,32 @@ static void init_network_interfaces(AppWidgets *widgets) {
         
         GtkWidget *icon_image = gtk_image_new_from_icon_name(icon_name, GTK_ICON_SIZE_BUTTON);
         
-        // Créer le texte pour l'interface
+        // Create text for interface
         char iface_text[128];
         snprintf(iface_text, sizeof(iface_text), "%s (%s)", iface_name, iface_type);
         GtkWidget *iface_label = gtk_label_new(iface_text);
         gtk_label_set_xalign(GTK_LABEL(iface_label), 0.0);
         
-        // Ajouter icône et label au HBox
+        // Add icon and label to HBox
         gtk_box_pack_start(GTK_BOX(iface_hbox), icon_image, FALSE, FALSE, 0);
         gtk_box_pack_start(GTK_BOX(iface_hbox), iface_label, FALSE, FALSE, 0);
         
-        // Colonne 1: IP Address
+        // Column 1: IP Address
         GtkWidget *ip_label = gtk_label_new("Loading...");
         gtk_label_set_xalign(GTK_LABEL(ip_label), 0.0);
         gtk_widget_set_hexpand(ip_label, TRUE);
         
-        // Colonne 2: Upload
+        // Column 2: Upload
         GtkWidget *upload_label = gtk_label_new("0 KB/s");
         gtk_label_set_xalign(GTK_LABEL(upload_label), 1.0);
         gtk_widget_set_hexpand(upload_label, TRUE);
         
-        // Colonne 3: Download
+        // Column 3: Download
         GtkWidget *download_label = gtk_label_new("0 KB/s");
         gtk_label_set_xalign(GTK_LABEL(download_label), 1.0);
         gtk_widget_set_hexpand(download_label, TRUE);
         
-        // Stocker les labels pour mise à jour ultérieure
+        // Store labels for later update
         if (interface_count < widgets->network_interface_count) {
             strncpy(widgets->network_interfaces[interface_count].interface_name, iface_name, 63);
             widgets->network_interfaces[interface_count].ip_label = ip_label;
@@ -332,7 +393,7 @@ static void init_network_interfaces(AppWidgets *widgets) {
             widgets->network_interfaces[interface_count].download_label = download_label;
         }
         
-        // Attacher au grid principal
+        // Attach to main grid
         gtk_grid_attach(GTK_GRID(table_grid), iface_hbox, 0, row, 1, 1);
         gtk_grid_attach(GTK_GRID(table_grid), ip_label, 1, row, 1, 1);
         gtk_grid_attach(GTK_GRID(table_grid), upload_label, 2, row, 1, 1);
@@ -343,26 +404,26 @@ static void init_network_interfaces(AppWidgets *widgets) {
         token = strtok(NULL, ",");
     }
     
-    // Ajouter le grid complet au vbox
+    // Add complete grid to vbox
     gtk_box_pack_start(GTK_BOX(widgets->network_vbox), table_grid, FALSE, FALSE, 2);
     
     gtk_widget_show_all(widgets->network_vbox);
 }
 
-// Initialiser la liste des disques physiques (appelée une seule fois)
+// Initialize physical storage list (called once)
 static void init_physical_storages(AppWidgets *widgets) {
     if (widgets == NULL) {
         return;
     }
     
-    // Vider la boîte si elle existe
+    // Clear the box if it exists
     GList *children = gtk_container_get_children(GTK_CONTAINER(widgets->storage_vbox));
     for (GList *iter = children; iter != NULL; iter = g_list_next(iter)) {
         gtk_widget_destroy(GTK_WIDGET(iter->data));
     }
     g_list_free(children);
     
-    // Récupérer la liste des disques physiques
+    // Get physical storages list
     int storage_count = 0;
     widgets->physical_storages = get_physical_storages(&storage_count);
     
@@ -373,21 +434,21 @@ static void init_physical_storages(AppWidgets *widgets) {
         return;
     }
     
-    // Allouer la mémoire pour les widgets des disques
+    // Allocate memory for disk widgets
     widgets->storage_count = storage_count;
     widgets->storages = malloc(sizeof(StorageWidgets) * storage_count);
     
-    // Créer une boîte pour les boutons (au-dessus du tableau)
+    // Create button box (above the table)
     GtkWidget *button_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
     gtk_widget_set_hexpand(button_box, TRUE);
     
-    // Bouton Refresh (à gauche)
+    // Refresh button (on the left)
     GtkWidget *refresh_button = gtk_button_new_with_label("🔄 Refresh");
     g_signal_connect(refresh_button, "clicked",
                      G_CALLBACK(on_storage_refresh_clicked), widgets);
     gtk_box_pack_start(GTK_BOX(button_box), refresh_button, FALSE, FALSE, 0);
     
-    // Bouton Speed Test (à droite)
+    // Speed Test button (on the right)
     widgets->speed_test_button = gtk_button_new_with_label("⚡ Speed Test");
     g_signal_connect(widgets->speed_test_button, "clicked",
                      G_CALLBACK(on_storage_speed_test_clicked), widgets);
@@ -395,7 +456,7 @@ static void init_physical_storages(AppWidgets *widgets) {
     
     gtk_box_pack_start(GTK_BOX(widgets->storage_vbox), button_box, FALSE, FALSE, 5);
     
-    // Créer UN SEUL grid pour tout le tableau (header + data)
+    // Create a SINGLE grid for the entire table (header + data)
     GtkWidget *table_grid = gtk_grid_new();
     gtk_grid_set_column_spacing(GTK_GRID(table_grid), 10);
     gtk_grid_set_row_spacing(GTK_GRID(table_grid), 5);
@@ -450,31 +511,31 @@ static void init_physical_storages(AppWidgets *widgets) {
     GtkWidget *separator = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
     gtk_grid_attach(GTK_GRID(table_grid), separator, 0, 1, 9, 1);
     
-    // Ajouter chaque disque
+    // Add each disk
     for (int i = 0; i < storage_count; i++) {
         PhysicalStorage *disk = &widgets->physical_storages[i];
         int row = i + 2;
         
-        // Initialiser la structure
+        // Initialize structure
         memset(&widgets->storages[i], 0, sizeof(StorageWidgets));
         strncpy(widgets->storages[i].storage_name, disk->name, sizeof(widgets->storages[i].storage_name) - 1);
         
-        // Colonne 0: Nom du disque
+        // Column 0: Disk name
         GtkWidget *name_label = gtk_label_new(disk->name);
         gtk_label_set_xalign(GTK_LABEL(name_label), 0.0);
         
-        // Colonne 1: Type
+        // Column 1: Type
         GtkWidget *type_label = gtk_label_new(disk->type);
         gtk_label_set_xalign(GTK_LABEL(type_label), 0.0);
         
-        // Colonne 2: Interface
+        // Column 2: Interface
         GtkWidget *interface_label = gtk_label_new(disk->interface);
         gtk_label_set_xalign(GTK_LABEL(interface_label), 0.0);
         
-        // Colonnes 3-8: Used, Available, Total, Usage, Read, Write
+        // Columns 3-8: Used, Available, Total, Usage, Read, Write
         char used_str[64], available_str[64], total_str[64], usage_str[64];
         
-        // Afficher en MB si < 1 GB, sinon en GB
+        // Display in MB if < 1 GB, otherwise in GB
         if (disk->used_gb < 1.0f) {
             snprintf(used_str, sizeof(used_str), "%.0f MB", disk->used_gb * 1024.0f);
         } else {
@@ -493,7 +554,7 @@ static void init_physical_storages(AppWidgets *widgets) {
             snprintf(total_str, sizeof(total_str), "%.1f GB", disk->capacity_gb);
         }
         
-        // Calculer le pourcentage d'utilisation
+        // Calculate usage percentage
         float usage_percent = 0.0f;
         if (disk->capacity_gb > 0) {
             usage_percent = (disk->used_gb / disk->capacity_gb) * 100.0f;

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=SysWatch
+GenericName=System Monitor
+Comment=System Information & Health Monitor for Linux
+Exec=syswatch
+Icon=syswatch
+Terminal=false
+Categories=System;Monitor;GTK;
+Keywords=system;monitor;hardware;temperature;cpu;gpu;memory;disk;network;
+StartupNotify=true

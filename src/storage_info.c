@@ -1,6 +1,6 @@
 /*
  * disk_info.c
- * Implémentation des fonctions de lecture des informations de disques physiques
+ * Physical disk information reading functions implementation
  */
 
 #define _GNU_SOURCE
@@ -29,30 +29,30 @@ float get_storage_available_gb(void) {
 // DISK SPEED TEST - GLOBAL
 // ============================================================================
 
-// Effectuer un test de vitesse de lecture/écriture disque global
+// Perform a global disk read/write speed test
 void perform_storage_speed_test(float *read_speed_mbps, float *write_speed_mbps) {
     if (read_speed_mbps == NULL || write_speed_mbps == NULL) {
         return;
     }
     
-    // Valeurs par défaut si le test échoue
+    // Default values if test fails
     *read_speed_mbps = 0.0f;
     *write_speed_mbps = 0.0f;
     
-    // Test d'écriture: créer un fichier de 100MB et mesurer le temps
+    // Write test: create 100MB file and measure time
     FILE *fp = fopen("/tmp/syswatch_speed_test.bin", "wb");
     if (fp == NULL) {
         return;
     }
     
-    // Mesurer l'écriture
+    // Measure write
     char buffer[1024 * 1024];  // 1MB buffer
     memset(buffer, 'A', sizeof(buffer));
     
     struct timespec start_write, end_write;
     clock_gettime(CLOCK_MONOTONIC, &start_write);
     
-    // Écrire 100 MB
+    // Write 100 MB
     for (int i = 0; i < 100; i++) {
         if (fwrite(buffer, 1, sizeof(buffer), fp) != sizeof(buffer)) {
             fclose(fp);
@@ -65,12 +65,12 @@ void perform_storage_speed_test(float *read_speed_mbps, float *write_speed_mbps)
     clock_gettime(CLOCK_MONOTONIC, &end_write);
     fclose(fp);
     
-    // Calculer la vitesse d'écriture
+    // Calculate write speed
     double write_time = (end_write.tv_sec - start_write.tv_sec) + 
                        (end_write.tv_nsec - start_write.tv_nsec) / 1e9;
     *write_speed_mbps = (write_time > 0) ? (100.0f / write_time) : 0.0f;
     
-    // Mesurer la lecture
+    // Measure read
     fp = fopen("/tmp/syswatch_speed_test.bin", "rb");
     if (fp == NULL) {
         unlink("/tmp/syswatch_speed_test.bin");
@@ -82,7 +82,7 @@ void perform_storage_speed_test(float *read_speed_mbps, float *write_speed_mbps)
     struct timespec start_read, end_read;
     clock_gettime(CLOCK_MONOTONIC, &start_read);
     
-    // Lire 100 MB
+    // Read 100 MB
     for (int i = 0; i < 100; i++) {
         if (fread(read_buffer, 1, sizeof(read_buffer), fp) != sizeof(read_buffer)) {
             fclose(fp);
@@ -94,7 +94,7 @@ void perform_storage_speed_test(float *read_speed_mbps, float *write_speed_mbps)
     clock_gettime(CLOCK_MONOTONIC, &end_read);
     fclose(fp);
     
-    // Calculer la vitesse de lecture
+    // Calculate read speed
     double read_time = (end_read.tv_sec - start_read.tv_sec) + 
                       (end_read.tv_nsec - start_read.tv_nsec) / 1e9;
     *read_speed_mbps = (read_time > 0) ? (100.0f / read_time) : 0.0f;
@@ -424,10 +424,25 @@ void get_storage_speed_test(const char *storage_name, float *read_mbps, float *w
         return;
     }
     
-    // Si le point de montage est la racine ("/"), utiliser /tmp pour éviter les problèmes de permissions
+    // Si le point de montage est la racine ("/"), on doit trouver un autre emplacement
+    // ATTENTION: /tmp est souvent un tmpfs (RAM) sur les systèmes modernes, pas le vrai disque!
     char test_dir[512];
+    
     if (strcmp(mount_point, "/") == 0) {
-        snprintf(test_dir, sizeof(test_dir), "/tmp");
+        // Pour le disque racine, utiliser un répertoire sur le vrai disque
+        // /var/tmp est généralement sur le disque, contrairement à /tmp qui peut être en RAM
+        struct stat st;
+        if (stat("/var/tmp", &st) == 0 && S_ISDIR(st.st_mode)) {
+            snprintf(test_dir, sizeof(test_dir), "/var/tmp");
+        } else {
+            // Fallback: utiliser le home de l'utilisateur
+            const char *home = getenv("HOME");
+            if (home != NULL) {
+                snprintf(test_dir, sizeof(test_dir), "%s", home);
+            } else {
+                snprintf(test_dir, sizeof(test_dir), "/tmp");  // Dernier recours
+            }
+        }
     } else {
         snprintf(test_dir, sizeof(test_dir), "%s", mount_point);
     }

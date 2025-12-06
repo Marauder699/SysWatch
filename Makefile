@@ -42,4 +42,29 @@ install-deps:
 	sudo apt-get update
 	sudo apt-get install -y libgtk-3-dev pkg-config
 
-.PHONY: all clean run install-deps
+install: $(TARGET)
+	@echo "Installation de SysWatch..."
+	sudo cp $(TARGET) /usr/local/bin/
+	sudo chmod +x /usr/local/bin/$(TARGET)
+	@echo "Installation du fichier .desktop..."
+	sudo cp desktop/syswatch.desktop /usr/share/applications/
+	@if [ -f icons/syswatch.png ]; then \
+		echo "Installation de l'icône..."; \
+		sudo mkdir -p /usr/share/icons/hicolor/256x256/apps; \
+		sudo cp icons/syswatch.png /usr/share/icons/hicolor/256x256/apps/; \
+		sudo gtk-update-icon-cache /usr/share/icons/hicolor/ -f 2>/dev/null || true; \
+	else \
+		echo "Aucune icône trouvée (icons/syswatch.png manquant)"; \
+		echo "L'application utilisera l'icône système par défaut"; \
+	fi
+	@echo "Installation terminée!"
+
+uninstall:
+	@echo "Désinstallation de SysWatch..."
+	sudo rm -f /usr/local/bin/$(TARGET)
+	sudo rm -f /usr/share/applications/syswatch.desktop
+	sudo rm -f /usr/share/icons/hicolor/256x256/apps/syswatch.png
+	sudo gtk-update-icon-cache /usr/share/icons/hicolor/ -f 2>/dev/null || true
+	@echo "Désinstallation terminée!"
+
+.PHONY: all clean run install-deps install uninstall

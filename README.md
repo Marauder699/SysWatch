@@ -228,5 +228,19 @@ If SysWatch helps you or you'd like to support development, consider:
 
 ## 👤 Author
 
+**Stéphane Corriveau** — Full-Stack Developer
+
+### Journey
+- **🕹️ Early Years**: Vic-20, Commodore 64, Amiga 500 (the classics!)
+- **🎓 University**: Pascal, C/C++
+- **💼 Early Career**: Delphi, C++ Builder
+- **🏢 Mid Career**: 10+ years in enterprise systems (SAP)
+- **🌐 Recent (10 years)**: Web development (TypeScript, Angular, C# .NET, Python)
+
+### Current Focus
+- 🐧 Linux enthusiast, junior exploring deeper
+- 🔧 System tools and optimization
+- 💻 Full-stack across web, desktop, and embedded systems
+
 Developed December 2025 for Raspberry Pi and general Linux  
-With lots of love and "Vibe Programming" ❤️
+With passion and lots of fun ❤️
