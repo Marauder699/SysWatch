@@ -74,6 +74,10 @@ sudo apt-get install libgtk-3-0  # Install dependency if needed
 - ✅ Modular architecture **(MVC)**: separation of view/model/controller
 - ✅ Adaptive layout that responds to window resizing
 
+## Screenshots
+
+![App Screenshot](https://github.com/Marauder699/SysWatch/releases/download/v1.0.0/SysWatch.png)
+
 ## 📋 Prerequisites
 
 ```bash
