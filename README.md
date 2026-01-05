@@ -1,4 +1,4 @@
-# SysWatch - System Information & Health Monitor
+# SysWatch - Linux System Monitor for Raspberry Pi | Real-Time Hardware Monitoring
 
 [![GitHub Release](https://img.shields.io/github/v/release/Marauder699/SysWatch)](https://github.com/Marauder699/SysWatch/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -9,11 +9,42 @@
 
 🖥️ **Lightweight GTK system monitor for Linux/Raspberry Pi** - Real-time CPU/GPU/Memory/Disk monitoring with color-coded temperature alerts. Multi-architecture support (ARM, x86, x64).
 
+## What is SysWatch?  
+
+SysWatch is a **free, open-source system monitor** for **Linux** and **Raspberry Pi** built with **GTK3** and **C**. It provides real-time monitoring of CPU temperature, GPU usage, memory consumption, network traffic, and disk performance with a modern graphical interface.
+
+Perfect for Raspberry Pi enthusiasts, Linux system administrators, and developers who need lightweight hardware monitoring with visual temperature alerts.
+
 **Hybrid GUI application** in C combining:
 - 📋 **System Information**: detailed hardware and OS specifications
 - 🌡️ **Health monitoring**: real-time system health indicators (color-coded temperature)
 
-Designed for Linux (Raspberry Pi, PC, servers) with a modern GTK interface.
+Designed for Linux (Raspberry Pi, PC, servers) with a modern GTK interface. 
+
+---
+
+## 🔍 Keywords & Topics
+
+**Search Keywords**:  
+system monitor • linux monitoring • raspberry pi monitoring • gtk application • real-time monitoring • cpu temperature monitor • gpu monitoring • memory usage monitor • disk speed test • network monitoring • health monitoring • desktop application • c programming • system health • hardware monitoring • thermal monitoring • lightweight monitor
+
+**Recommended GitHub Topics** (to add in repository settings):
+- `system-monitor`
+- `linux`
+- `raspberry-pi`
+- `gtk`
+- `c`
+- `health-monitoring`
+- `real-time-monitoring`
+- `desktop-application`
+- `hardware-monitoring`
+- `temperature-monitor`
+- `cpu-monitor`
+- `gpu-monitor`
+- `performance-monitoring`
+- `system-information`
+
+*Note: Repository topics can be added by navigating to the repository Settings tab → scrolling to the "Topics" section*
 
 ---
 
@@ -90,22 +121,22 @@ sudo apt-get install libgtk-3-0  # Install dependency if needed
 - ✅ **Refresh button** — updates the disk list when new disks are connected (USB, SD card, external HDD)
 - ✅ **Disk speed test** — measures read/write in MB/s per disk (on-demand)
 - ✅ **Physical disk identification** — NVMe, USB SSD, HDD with capacity
-- ✅ **Interface detection**:
-  - NVMe: automatically detects PCIe Gen3/Gen4/Gen5
-  - USB: detects USB 1.x / 2.0 / 3.0 / 3.1+ by actual speed
+- ✅ **Interface detection**: 
+  - NVMe:  automatically detects PCIe Gen3/Gen4/Gen5
+  - USB:  detects USB 1.x / 2.0 / 3.0 / 3.1+ by actual speed
   - SATA/IDE: traditional HDD
 - ✅ **Used/available space** per disk (real-time)
 
 ### 🎨 Interface
 - ✅ **Automatic refresh every 1 second** for health monitoring
-- ✅ **Visual color indicators** (CPU temperature: 🟢🟡🔴)
+- ✅ **Visual color indicators** (CPU temperature:  🟢🟡🔴)
 - ✅ GTK3-based modern responsive GUI
-- ✅ Modular architecture **(MVC)**: separation of view/model/controller
+- ✅ Modular architecture **(MVC)**:  separation of view/model/controller
 - ✅ Adaptive layout that responds to window resizing
 
 ## Screenshots
 
-![App Screenshot](https://github.com/Marauder699/SysWatch/releases/download/v1.0.0/SysWatch.png)
+![App Screenshot](https://github.com/Marauder699/SysWatch/releases/download/v1.0.0/SysWatch. png)
 
 ## 📋 Prerequisites
 
@@ -155,7 +186,7 @@ SysWatch/
 │   ├── main.c            # Entry point
 │   ├── system_info.c     # Model (system data ~1700 lines)
 │   └── gui.c             # View (GTK UI ~960 lines)
-├── obj/                  # Object files (.o)
+├── obj/                  # Object files (. o)
 ├── Makefile              # Build system
 ├── README.md             # Documentation (this file)
 ├── ROADMAP.md            # Planned features
@@ -167,13 +198,13 @@ SysWatch/
 
 See `ROADMAP.md` for the detailed plan of upcoming features.
 
-### 🌍 Next major feature: Multilingual system
+### 🌍 Next major feature:  Multilingual system
 
-A complete translation system using JSON files per language is planned to make the app easily localizable. See `ROADMAP.md` for details.
+A complete translation system using JSON files per language is planned to make the app easily localizable.  See `ROADMAP.md` for details.
 
 ## 🔧 Technical architecture
 
-- **Model**: `system_info.c` — reads system data via `/sys`, `/proc`
+- **Model**:  `system_info.c` — reads system data via `/sys`, `/proc`
 - **View**: `gui.c` — GTK+ interface with tabs (System, CPU, Memory, Network, Disk)
 - **Controller**: `main.c` — orchestration and main loop
 - **Portable**: Works on Raspberry Pi, PC Linux, servers (x86, ARM, ARM64)
@@ -213,7 +244,7 @@ A complete translation system using JSON files per language is planned to make t
 - **Speed Test** — read/write speed per disk
 - Total and used capacity
 - Disk type identification
-- **Detected interfaces**: PCIe Gen3/4/5, USB 2.0/3.0/3.1+, SATA
+- **Detected interfaces**:  PCIe Gen3/4/5, USB 2.0/3.0/3.1+, SATA
 
 ## 📝 Technical notes
 
@@ -237,7 +268,7 @@ A complete translation system using JSON files per language is planned to make t
 
 ## 💡 Project philosophy
 
-**SysWatch** combines the best of two approaches:
+**SysWatch** combines the best of two approaches: 
 
 ### Clear system information
 - Clean presentation of hardware specs
@@ -261,6 +292,7 @@ A complete translation system using JSON files per language is planned to make t
 - Sophisticated disk speed test using O_DIRECT
 - Accurate interface detection (USB Gen, PCIe Gen)
 - Multi-architecture support (ARM, x86, x64)
+
 - GPU handling for 4+ vendor types
 - Dual-unit temperature display for global accessibility
 - ~2700 lines of structured C code
@@ -289,7 +321,7 @@ If SysWatch helps you or you'd like to support development, consider:
 - Buy Me a Coffee
 - Patreon
 
-*Note: You can use SysWatch completely free regardless - donations are optional and appreciated!*
+*Note: You can use SysWatch completely free regardless - donations are optional and appreciated! *
 
 ## 👤 Author
 
@@ -298,9 +330,9 @@ If SysWatch helps you or you'd like to support development, consider:
 ### Journey
 - **🕹️ Early Years**: Vic-20, Commodore 64, Amiga 500 (the classics!)
 - **🎓 University**: Pascal, C/C++
-- **💼 Early Career**: Delphi, C++ Builder
+- **💼 Early Career**:  Delphi, C++ Builder
 - **🏢 Mid Career**: 10+ years in enterprise systems (SAP)
-- **🌐 Recent (10 years)**: Web development (TypeScript, Angular, C# .NET, Python)
+- **🌐 Recent (10 years)**: Web development (TypeScript, Angular, C# . NET, Python)
 
 ### Current Focus
 - 🐧 Linux enthusiast, junior exploring deeper
