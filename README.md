@@ -89,6 +89,47 @@ sudo apt-get install libgtk-3-0  # Install dependency if needed
 
 ---
 
+## 🔍 Keywords & Topics
+
+**Search Keywords**: 
+system monitor • linux monitoring • raspberry pi monitoring • gtk application • real-time monitoring • cpu temperature monitor • gpu monitoring • memory usage monitor • disk speed test • network monitoring • health monitoring • desktop application • c programming • system health • hardware monitoring • thermal monitoring • lightweight monitor
+
+**Recommended GitHub Topics** (to add in repository settings):
+- `system-monitor`
+- `linux`
+- `raspberry-pi`
+- `gtk`
+- `c`
+- `health-monitoring`
+- `real-time-monitoring`
+- `desktop-application`
+- `hardware-monitoring`
+- `temperature-monitor`
+- `cpu-monitor`
+- `gpu-monitor`
+- `performance-monitoring`
+- `system-information`
+
+*Note: Repository topics can be added by navigating to the repository Settings tab → scrolling to the "Topics" section*
+
+---
+
+## 📥 Quick Download
+
+**[⬇️ Download Latest Release (ARM64 - Raspberry Pi)](https://github.com/Marauder699/SysWatch/releases/latest/download/syswatch-aarch64-linux)**
+
+```bash
+# Quick install (Raspberry Pi 64-bit)
+wget https://github.com/Marauder699/SysWatch/releases/latest/download/syswatch-aarch64-linux
+chmod +x syswatch-aarch64-linux
+sudo apt-get install libgtk-3-0  # Install dependency if needed
+./syswatch-aarch64-linux
+```
+
+**Or compile from source for other platforms (x86_64, ARMv7)** → See [Build](#-build) section below
+
+---
+
 ## 🎯 Current Features (v1.0)
 
 ### 📋 System Information (Static)
