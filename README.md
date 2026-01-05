@@ -48,6 +48,31 @@ system monitor • linux monitoring • raspberry pi monitoring • gtk applicat
 
 ---
 
+## 🔍 Keywords & Topics
+
+**Search Keywords**: 
+system monitor • linux monitoring • raspberry pi monitoring • gtk application • real-time monitoring • cpu temperature monitor • gpu monitoring • memory usage monitor • disk speed test • network monitoring • health monitoring • desktop application • c programming • system health • hardware monitoring • thermal monitoring • lightweight monitor
+
+**Recommended GitHub Topics** (to add in repository settings):
+- `system-monitor`
+- `linux`
+- `raspberry-pi`
+- `gtk`
+- `c`
+- `health-monitoring`
+- `real-time-monitoring`
+- `desktop-application`
+- `hardware-monitoring`
+- `temperature-monitor`
+- `cpu-monitor`
+- `gpu-monitor`
+- `performance-monitoring`
+- `system-information`
+
+*Note: Repository topics can be added by navigating to the repository Settings tab → scrolling to the "Topics" section*
+
+---
+
 ## 📥 Quick Download
 
 **[⬇️ Download Latest Release (ARM64 - Raspberry Pi)](https://github.com/Marauder699/SysWatch/releases/latest/download/syswatch-aarch64-linux)**
