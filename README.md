@@ -19,7 +19,8 @@ Designed for Linux (Raspberry Pi, PC, servers) with a modern GTK interface.
 
 ## 🔍 Keywords & Topics
 
-**Search Keywords**: system monitor, linux monitoring, raspberry pi monitoring, gtk application, real-time monitoring, cpu temperature monitor, gpu monitoring, memory usage monitor, disk speed test, network monitoring, health monitoring, desktop application, c programming, system health, hardware monitoring, thermal monitoring, lightweight monitor
+**Search Keywords**: 
+system monitor • linux monitoring • raspberry pi monitoring • gtk application • real-time monitoring • cpu temperature monitor • gpu monitoring • memory usage monitor • disk speed test • network monitoring • health monitoring • desktop application • c programming • system health • hardware monitoring • thermal monitoring • lightweight monitor
 
 **Recommended GitHub Topics** (to add in repository settings):
 - `system-monitor`

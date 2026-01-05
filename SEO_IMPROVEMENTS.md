@@ -56,7 +56,7 @@ A new section highlighting 7 specific use cases to improve discoverability:
 Since GitHub topics can only be added through the repository settings (not via README), you'll need to add them manually:
 
 1. Go to your repository: https://github.com/Marauder699/SysWatch
-2. Click on "⚙️ Settings" (top right, near Code/Issues/Pull requests)
+2. Click on the "Settings" tab in the main navigation bar
 3. Scroll down to the "Topics" section
 4. Click "Add topics"
 5. Add each of the recommended topics listed above
@@ -68,7 +68,7 @@ Since GitHub topics can only be added through the repository settings (not via R
 You can also update the repository description to match the new SEO-friendly version:
 
 1. Go to your repository: https://github.com/Marauder699/SysWatch
-2. Click the "⚙️" gear icon next to "About" (right sidebar)
+2. Click the "⚙️" gear icon next to "About" (right sidebar - visible when you have edit permissions)
 3. Update the description to:
    ```
    🖥️ Lightweight GTK system monitor for Linux/Raspberry Pi - Real-time CPU/GPU/Memory/Disk monitoring with color-coded temperature alerts. Multi-architecture support (ARM, x86, x64).
