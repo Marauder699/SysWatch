@@ -21,57 +21,15 @@ Perfect for Raspberry Pi enthusiasts, Linux system administrators, and developer
 
 Designed for Linux (Raspberry Pi, PC, servers) with a modern GTK interface. 
 
----
-
 ## 🔍 Keywords & Topics
 
 **Search Keywords**:  
 system monitor • linux monitoring • raspberry pi monitoring • gtk application • real-time monitoring • cpu temperature monitor • gpu monitoring • memory usage monitor • disk speed test • network monitoring • health monitoring • desktop application • c programming • system health • hardware monitoring • thermal monitoring • lightweight monitor
 
 **Recommended GitHub Topics** (to add in repository settings):
-- `system-monitor`
-- `linux`
-- `raspberry-pi`
-- `gtk`
-- `c`
-- `health-monitoring`
-- `real-time-monitoring`
-- `desktop-application`
-- `hardware-monitoring`
-- `temperature-monitor`
-- `cpu-monitor`
-- `gpu-monitor`
-- `performance-monitoring`
-- `system-information`
+`system-monitor` • `linux` • `raspberry-pi` • `gtk` • `c` • `health-monitoring` • `real-time-monitoring` • `desktop-application` • `hardware-monitoring` • `temperature-monitor` • `cpu-monitor` • `gpu-monitor` • `performance-monitoring` • `system-information`
 
 *Note: Repository topics can be added by navigating to the repository Settings tab → scrolling to the "Topics" section*
-
----
-
-## 🔍 Keywords & Topics
-
-**Search Keywords**: 
-system monitor • linux monitoring • raspberry pi monitoring • gtk application • real-time monitoring • cpu temperature monitor • gpu monitoring • memory usage monitor • disk speed test • network monitoring • health monitoring • desktop application • c programming • system health • hardware monitoring • thermal monitoring • lightweight monitor
-
-**Recommended GitHub Topics** (to add in repository settings):
-- `system-monitor`
-- `linux`
-- `raspberry-pi`
-- `gtk`
-- `c`
-- `health-monitoring`
-- `real-time-monitoring`
-- `desktop-application`
-- `hardware-monitoring`
-- `temperature-monitor`
-- `cpu-monitor`
-- `gpu-monitor`
-- `performance-monitoring`
-- `system-information`
-
-*Note: Repository topics can be added by navigating to the repository Settings tab → scrolling to the "Topics" section*
-
----
 
 ## 📥 Quick Download
 
@@ -86,49 +44,6 @@ sudo apt-get install libgtk-3-0  # Install dependency if needed
 ```
 
 **Or compile from source for other platforms (x86_64, ARMv7)** → See [Build](#-build) section below
-
----
-
-## 🔍 Keywords & Topics
-
-**Search Keywords**: 
-system monitor • linux monitoring • raspberry pi monitoring • gtk application • real-time monitoring • cpu temperature monitor • gpu monitoring • memory usage monitor • disk speed test • network monitoring • health monitoring • desktop application • c programming • system health • hardware monitoring • thermal monitoring • lightweight monitor
-
-**Recommended GitHub Topics** (to add in repository settings):
-- `system-monitor`
-- `linux`
-- `raspberry-pi`
-- `gtk`
-- `c`
-- `health-monitoring`
-- `real-time-monitoring`
-- `desktop-application`
-- `hardware-monitoring`
-- `temperature-monitor`
-- `cpu-monitor`
-- `gpu-monitor`
-- `performance-monitoring`
-- `system-information`
-
-*Note: Repository topics can be added by navigating to the repository Settings tab → scrolling to the "Topics" section*
-
----
-
-## 📥 Quick Download
-
-**[⬇️ Download Latest Release (ARM64 - Raspberry Pi)](https://github.com/Marauder699/SysWatch/releases/latest/download/syswatch-aarch64-linux)**
-
-```bash
-# Quick install (Raspberry Pi 64-bit)
-wget https://github.com/Marauder699/SysWatch/releases/latest/download/syswatch-aarch64-linux
-chmod +x syswatch-aarch64-linux
-sudo apt-get install libgtk-3-0  # Install dependency if needed
-./syswatch-aarch64-linux
-```
-
-**Or compile from source for other platforms (x86_64, ARMv7)** → See [Build](#-build) section below
-
----
 
 ## 🎯 Current Features (v1.0)
 
@@ -175,9 +90,9 @@ sudo apt-get install libgtk-3-0  # Install dependency if needed
 - ✅ Modular architecture **(MVC)**:  separation of view/model/controller
 - ✅ Adaptive layout that responds to window resizing
 
-## Screenshots
+## 📸 Screenshots
 
-![App Screenshot](https://github.com/Marauder699/SysWatch/releases/download/v1.0.0/SysWatch. png)
+![App Screenshot](https://github.com/Marauder699/SysWatch/releases/download/v1.0.0/SysWatch.png)
 
 ## 📋 Prerequisites
 
@@ -321,8 +236,6 @@ A complete translation system using JSON files per language is planned to make t
 - Visual temperature indicators
 - CPU/GPU/Memory/Network monitoring
 - Modern, responsive design
-
----
 
 ## 🎓 What started as a "vibe project"
 
