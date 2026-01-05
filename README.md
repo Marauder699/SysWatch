@@ -38,7 +38,7 @@ system monitor • linux monitoring • raspberry pi monitoring • gtk applicat
 - `performance-monitoring`
 - `system-information`
 
-*Note: Repository topics can be added by clicking "⚙️ Settings" → scrolling to "Topics" section*
+*Note: Repository topics can be added by navigating to the repository Settings tab → scrolling to the "Topics" section*
 
 ---
 
