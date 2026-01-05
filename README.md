@@ -4,12 +4,41 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Language: C](https://img.shields.io/badge/Language-C-blue.svg)](https://en.wikipedia.org/wiki/C_(programming_language))
 [![Platform: Linux](https://img.shields.io/badge/Platform-Linux-green.svg)](https://www.linux.org/)
+[![GTK3](https://img.shields.io/badge/GTK-3-blue.svg)](https://www.gtk.org/)
+[![Raspberry Pi](https://img.shields.io/badge/Raspberry%20Pi-Compatible-red.svg)](https://www.raspberrypi.org/)
 
-🖥️ **Hybrid GUI application** in C combining:
+🖥️ **Lightweight GTK system monitor for Linux/Raspberry Pi** - Real-time CPU/GPU/Memory/Disk monitoring with color-coded temperature alerts. Multi-architecture support (ARM, x86, x64).
+
+**Hybrid GUI application** in C combining:
 - 📋 **System Information**: detailed hardware and OS specifications
 - 🌡️ **Health monitoring**: real-time system health indicators (color-coded temperature)
 
 Designed for Linux (Raspberry Pi, PC, servers) with a modern GTK interface.
+
+---
+
+## 🔍 Keywords & Topics
+
+**Search Keywords**: 
+system monitor • linux monitoring • raspberry pi monitoring • gtk application • real-time monitoring • cpu temperature monitor • gpu monitoring • memory usage monitor • disk speed test • network monitoring • health monitoring • desktop application • c programming • system health • hardware monitoring • thermal monitoring • lightweight monitor
+
+**Recommended GitHub Topics** (to add in repository settings):
+- `system-monitor`
+- `linux`
+- `raspberry-pi`
+- `gtk`
+- `c`
+- `health-monitoring`
+- `real-time-monitoring`
+- `desktop-application`
+- `hardware-monitoring`
+- `temperature-monitor`
+- `cpu-monitor`
+- `gpu-monitor`
+- `performance-monitoring`
+- `system-information`
+
+*Note: Repository topics can be added by navigating to the repository Settings tab → scrolling to the "Topics" section*
 
 ---
 
@@ -235,6 +264,17 @@ A complete translation system using JSON files per language is planned to make t
 - GPU handling for 4+ vendor types
 - Dual-unit temperature display for global accessibility
 - ~2700 lines of structured C code
+
+## 🎯 Use Cases
+
+SysWatch is perfect for:
+- 🍓 **Raspberry Pi enthusiasts** monitoring their SBCs (Single Board Computers)
+- 🖥️ **Linux desktop users** wanting lightweight system monitoring
+- 🔧 **System administrators** needing real-time health indicators
+- 👨‍💻 **Developers** testing applications under different system loads
+- 🎮 **Overclockers** monitoring temperatures and performance
+- 📊 **Hardware testers** benchmarking disk speeds and system capabilities
+- 🌡️ **Temperature-sensitive applications** requiring thermal monitoring
 
 ## 📄 License
 
