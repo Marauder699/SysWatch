@@ -292,6 +292,7 @@ A complete translation system using JSON files per language is planned to make t
 - Sophisticated disk speed test using O_DIRECT
 - Accurate interface detection (USB Gen, PCIe Gen)
 - Multi-architecture support (ARM, x86, x64)
+
 - GPU handling for 4+ vendor types
 - Dual-unit temperature display for global accessibility
 - ~2700 lines of structured C code
