@@ -107,6 +107,31 @@ void perform_storage_speed_test(float *read_speed_mbps, float *write_speed_mbps)
 // DISQUES PHYSIQUES
 // ============================================================================
 
+// Valider et assainir un nom de périphérique de stockage
+// Retourne true si le nom est sûr, false sinon
+// Accepte uniquement: lettres, chiffres, tirets, underscores
+static bool is_safe_storage_name(const char *name) {
+    if (name == NULL || name[0] == '\0') {
+        return false;
+    }
+    
+    // Vérifier la longueur raisonnable
+    size_t len = strlen(name);
+    if (len == 0 || len > 31) {
+        return false;
+    }
+    
+    // Vérifier que tous les caractères sont sûrs
+    for (size_t i = 0; i < len; i++) {
+        char c = name[i];
+        if (!isalnum(c) && c != '-' && c != '_') {
+            return false;  // Caractère non autorisé détecté
+        }
+    }
+    
+    return true;
+}
+
 // Récupérer la liste des stockages physiques
 PhysicalStorage* get_physical_storages(int *count) {
     if (count == NULL) {
@@ -131,6 +156,11 @@ PhysicalStorage* get_physical_storages(int *count) {
         size_t len = strlen(storage_name);
         if (len > 0 && storage_name[len-1] == '\n') {
             storage_name[len-1] = '\0';
+        }
+        
+        // SÉCURITÉ: Valider le nom pour prévenir l'injection de commande
+        if (!is_safe_storage_name(storage_name)) {
+            continue;  // Ignorer les noms suspects
         }
         
         // Ignorer les partitions:
