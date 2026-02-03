@@ -246,6 +246,7 @@ A complete translation system using JSON files per language is planned to make t
 - Sophisticated disk speed test using O_DIRECT
 - Accurate interface detection (USB Gen, PCIe Gen)
 - Multi-architecture support (ARM, x86, x64)
+
 - GPU handling for 4+ vendor types
 - Dual-unit temperature display for global accessibility
 - ~2700 lines of structured C code
@@ -285,7 +286,7 @@ If SysWatch helps you or you'd like to support development, consider:
 - **🎓 University**: Pascal, C/C++
 - **💼 Early Career**:  Delphi, C++ Builder
 - **🏢 Mid Career**: 10+ years in enterprise systems (SAP)
-- **🌐 Recent (10 years)**: Web development (TypeScript, Angular, C# .NET, Python)
+- **🌐 Recent (10 years)**: Web development (TypeScript, Angular, C# . NET, Python)
 
 ### Current Focus
 - 🐧 Linux enthusiast, junior exploring deeper
